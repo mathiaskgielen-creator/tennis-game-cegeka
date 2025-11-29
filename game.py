@@ -7,8 +7,6 @@ class TennisGame:
         pygame.init()
         pygame.display.set_caption("Tennis")
 
-        self.SCORE_NAMES = ["0", "15", "30", "40"]
-
         #Setup
         self.font = pygame.font.Font(None, 36)
         self.clock = pygame.time.Clock()
@@ -72,24 +70,30 @@ class TennisGame:
             score_text = self.font.render(self.score_label(), True, self.WHITE)
             self.screen.blit(score_text, (self.WIDTH // 2 - 40, 10))
 
-
             if self.waiting_for_serve and not self.game_over:
                 hint = self.font.render("Press SPACE to serve", True, self.WHITE)
                 self.screen.blit(hint, (self.WIDTH//2 - 120, self.HEIGHT//2))
 
-            pygame.draw.rect(self.screen, self.WHITE, self.player1)
-            pygame.draw.rect(self.screen, self.WHITE, self.player2)
-            pygame.draw.ellipse(self.screen, self.WHITE, self.ball)
-            pygame.display.flip()
+            self.draw()
             self.clock.tick(self.FPS)
-
-        winner = "Player 1" if self.score_p1 >= 5 else "Player 2"
-        winner_display = self.font.render(f"{winner} wins", True, self.WHITE)
-        self.screen.blit(winner_display, (self.WIDTH // 2 - 100 , self.HEIGHT // 2 ))
+        
+        self.display_winner()
+        
         pygame.display.update()
         pygame.time.wait(3000)
         pygame.quit()
         sys.exit()
+
+    def draw(self):
+        pygame.draw.rect(self.screen, self.WHITE, self.player1)
+        pygame.draw.rect(self.screen, self.WHITE, self.player2)
+        pygame.draw.ellipse(self.screen, self.WHITE, self.ball)
+        pygame.display.flip()
+
+    def display_winner(self):
+        winner = "Player 1" if self.winner == 1 else "Player 2"
+        winner_display = self.font.render(f"{winner} wins", True, self.WHITE)
+        self.screen.blit(winner_display, (self.WIDTH // 2 - 100 , self.HEIGHT // 2 ))
 
     def update(self, move_p1, move_p2):
         if self.waiting_for_serve:
@@ -174,8 +178,19 @@ class TennisGame:
             self.reset_positions()
             
     def score_label(self):
-        #TODO: return the score in tennis format (e.g., "15-30", "Deuce", "Advantage Player 1")
-        return f"{self.score_p1}-{self.score_p2}"
+        if self.game_over:
+            return f"Game!"
+
+        if self.score_p1 >= 3 and self.score_p2 >= 3:
+            if self.score_p1 == self.score_p2:
+                return "Deuce"
+            elif self.score_p1 == self.score_p2 + 1:
+                return "Advantage Player 1"
+            elif self.score_p2 == self.score_p1 + 1:
+                return "Advantage Player 2"
+
+        SCORE_NAMES = ["0", "15", "30", "40"]
+        return f"{SCORE_NAMES[self.score_p1]}-{SCORE_NAMES[self.score_p2]}"
     
 if __name__ == "__main__":
     game = TennisGame()
