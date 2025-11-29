@@ -51,7 +51,41 @@ class TennisGame:
         pass
 
     def score(self, player):
-        pass
+        if player == 1:
+            # Player 2 loses advantage, back to deuce
+            if self.score_p2 >= 4 and (self.score_p2 - self.score_p1) == 1:
+                self.score_p1 = 4
+                self.score_p2 = 4
+                self.waiting_for_serve = True
+                return
+
+            self.score_p1 += 1
+
+            # win condition
+            if self.score_p1 >= 4 and (self.score_p1 - self.score_p2) >= 2:
+                self.game_over = True
+                self.winner = 1
+
+            self.waiting_for_serve = True
+            return
+
+        if player == 2:
+            # Player 1 loses advantage, back to deuce
+            if self.score_p1 >= 4 and (self.score_p1 - self.score_p2) == 1:
+                self.score_p1 = 4
+                self.score_p2 = 4
+                self.waiting_for_serve = True
+                return
+
+            self.score_p2 += 1
+
+            # win condition
+            if self.score_p2 >= 4 and (self.score_p2 - self.score_p1) >= 2:
+                self.game_over = True
+                self.winner = 2
+
+            self.waiting_for_serve = True
+            return
 
     def check_colissions(self):
         pass
