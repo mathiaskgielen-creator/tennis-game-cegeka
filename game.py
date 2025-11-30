@@ -20,7 +20,7 @@ SCORE_NAMES = ["0", "15", "30", "40"]
 
 class TennisGame:
 
-    def __init__(self, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT):
+    def __init__(self, width=DEFAULT_WIDTH, height=DEFAULT_HEIGHT, speed_X=INITIAL_BALL_SPEED_X, speed_Y=INITIAL_BALL_SPEED_Y):
         pygame.init()
   
         pygame.display.set_caption("Tennis")
@@ -33,26 +33,20 @@ class TennisGame:
         self.HEIGHT = height
         self.screen = pygame.display.set_mode((width, height))
 
-        self.player_width = PLAYER_WIDTH
-        self.player_height = PLAYER_HEIGHT
-        self.ball_size = BALL_SIZE
-
-        self.FPS = FPS
-
         # Players
-        self.player1 = pygame.Rect(self.WIDTH - self.player_width * 2,
+        self.player1 = pygame.Rect(self.WIDTH - PLAYER_WIDTH * 2,
                                    self.HEIGHT - 50,
-                                   self.player_width, self.player_height)
+                                   PLAYER_WIDTH, PLAYER_HEIGHT)
 
-        self.player2 = pygame.Rect(self.player_width, 40,
-                                   self.player_width, self.player_height)
+        self.player2 = pygame.Rect(PLAYER_WIDTH, 40,
+                                   PLAYER_WIDTH, PLAYER_HEIGHT)
 
 
         # Ball
         self.ball = pygame.Rect(self.WIDTH - 40, self.HEIGHT - 40,
-                                self.ball_size, self.ball_size)
-        self.ball_speed_x = 0
-        self.ball_speed_y = 0
+                                BALL_SIZE, BALL_SIZE)
+        self.ball_speed_x = speed_X
+        self.ball_speed_y = speed_Y
 
         # Scores
         self.score_p1 = 0
@@ -92,7 +86,7 @@ class TennisGame:
                     self.screen.blit(hint, (self.WIDTH // 2 - 120, self.HEIGHT // 2))
 
                 self.draw()
-                self.clock.tick(self.FPS)
+                self.clock.tick(FPS)
 
             self.display_winner()
 
@@ -175,8 +169,8 @@ class TennisGame:
     def reset_positions(self) -> None:
         self.ball_speed_x = 0
         self.ball_speed_y = 0
-        self.player1.x = self.WIDTH - self.player_width * 2
-        self.player2.x = self.player_width
+        self.player1.x = self.WIDTH - PLAYER_WIDTH * 2
+        self.player2.x = PLAYER_WIDTH
 
     def check_colissions(self) -> None:
         if self.ball.left <= 0 or self.ball.right >= self.WIDTH:
