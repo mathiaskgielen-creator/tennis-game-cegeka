@@ -177,7 +177,7 @@ class TennisGame:
             self.score(2)
             self.reset_positions()
             
-    def score_label(self):
+    def score_label(self) -> str:
         if self.game_over:
             return f"Game!"
 
