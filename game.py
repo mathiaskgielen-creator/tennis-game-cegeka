@@ -57,6 +57,7 @@ class TennisGame:
         self.game_over = False
         self.winner = None
 
+    """Main game loop"""
     def start(self):
         try:
             while not self.game_over:
@@ -99,23 +100,27 @@ class TennisGame:
             pygame.quit()
             sys.exit()
 
+    """Draw players and ball on the screen"""
     def draw(self):
         pygame.draw.rect(self.screen, WHITE, self.player1)
         pygame.draw.rect(self.screen, WHITE, self.player2)
         pygame.draw.ellipse(self.screen, WHITE, self.ball)
         pygame.display.flip()
 
+    """Display the winner on the screen"""
     def display_winner(self):
         winner = "Player 1" if self.winner == 1 else "Player 2"
         winner_display = self.font.render(f"{winner} wins", True, WHITE)
         self.screen.blit(winner_display, (self.WIDTH // 2 - 100, self.HEIGHT // 2))
 
+    """Move player based on input"""
     def move_player(self, player_rect: pygame.Rect, move: int) -> None:
         if move < 0 and player_rect.left > 0:
             player_rect.x -= PLAYER_SPEED
         if move > 0 and player_rect.right < self.WIDTH:
             player_rect.x += PLAYER_SPEED
 
+    """Update game state"""
     def update(self, move_p1: int, move_p2: int) -> None:
         if self.waiting_for_serve:
             self.ball.centerx = self.player1.centerx
@@ -129,6 +134,7 @@ class TennisGame:
 
         self.check_colissions()
 
+    """Handle scoring logic"""
     def score(self, player: int) -> None:
         if player == 1:
             # Player 2 loses advantage, back to deuce
@@ -166,12 +172,14 @@ class TennisGame:
             self.waiting_for_serve = True
             return
 
+    """Reset ball and players positions after a point is scored"""
     def reset_positions(self) -> None:
         self.ball_speed_x = 0
         self.ball_speed_y = 0
         self.player1.x = self.WIDTH - PLAYER_WIDTH * 2
         self.player2.x = PLAYER_WIDTH
 
+    """Check for collisions and scoring conditions"""
     def check_colissions(self) -> None:
         if self.ball.left <= 0 or self.ball.right >= self.WIDTH:
             self.ball_speed_x = -self.ball_speed_x
@@ -189,6 +197,7 @@ class TennisGame:
             self.score(2)
             self.reset_positions()
 
+    """Generate score label based on current scores"""
     def score_label(self) -> str:
         if self.game_over:
             return f"Game!"
